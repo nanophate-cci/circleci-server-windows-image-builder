@@ -145,17 +145,8 @@ Configuration CircleBuildHost {
         # Install 7zip portable
         Script Install7ZipPortable {
             SetScript = {
-                $zipPath = "$env:TEMP\7z-portable.zip"
-                $extractPath = "C:\Program Files\7-Zip-Portable"
-                Invoke-WebRequest -Uri "https://www.7-zip.org/a/7z2409-x64.exe" -OutFile $zipPath
-                
-                # Create directory if it doesn't exist
-                if (-not (Test-Path $extractPath)) {
-                    New-Item -Path $extractPath -ItemType Directory -Force
-                }
-                
-                # Extract using built-in Expand-Archive
-                Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
+                $installerPath = "$env:TEMP\7z-installer.exe"
+                Invoke-WebRequest -Uri "https://www.7-zip.org/a/7z2409-x64.exe" -OutFile $installerPath
                 
                 # Add to PATH if not already there
                 $envPath = [Environment]::GetEnvironmentVariable("PATH", "Machine")
