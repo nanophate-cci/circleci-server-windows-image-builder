@@ -13,6 +13,7 @@ filters: &filters
   branches:
     only: 
     - master
+    - update-404-package-and-envvar-refresh
 
 
 library:
