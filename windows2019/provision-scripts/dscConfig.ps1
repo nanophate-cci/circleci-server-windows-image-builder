@@ -111,8 +111,23 @@ Configuration CircleBuildHost {
         # Install Git LFS
         Script InstallGitLFS {
             SetScript = {
+                # Refresh environment variables to ensure Git is detected
+                Write-Output "Refreshing environment variables to ensure Git is detected..."
+                $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + 
+                            [System.Environment]::GetEnvironmentVariable("Path","User")
+                
+                # Verify Git is accessible before proceeding
+                try {
+                    $gitVersion = git --version
+                    Write-Output "Git verification successful: $gitVersion"
+                } catch {
+                    Write-Output "WARNING: Git verification failed: $_"
+                    # Continue anyway as the refresh might still work
+                }
+
+                # Proceed with Git LFS installation
                 $installerPath = "$env:TEMP\git-lfs-installer.exe"
-                Invoke-WebRequest -Uri "https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-windows-amd64-v3.3.0.exe" -OutFile $installerPath
+                Invoke-WebRequest -Uri "https://github.com/git-lfs/git-lfs/releases/download/v3.3.0/git-lfs-windows-v3.3.0.exe" -OutFile $installerPath
                 Start-Process -FilePath $installerPath -ArgumentList "/VERYSILENT /NORESTART" -Wait
                 Remove-Item $installerPath -Force
             }
@@ -132,7 +147,7 @@ Configuration CircleBuildHost {
             SetScript = {
                 $zipPath = "$env:TEMP\7z-portable.zip"
                 $extractPath = "C:\Program Files\7-Zip-Portable"
-                Invoke-WebRequest -Uri "https://www.7-zip.org/a/7z2201-x64.zip" -OutFile $zipPath
+                Invoke-WebRequest -Uri "https://www.7-zip.org/a/7z2409-x64.exe" -OutFile $zipPath
                 
                 # Create directory if it doesn't exist
                 if (-not (Test-Path $extractPath)) {
