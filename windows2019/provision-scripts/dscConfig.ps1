@@ -150,11 +150,11 @@ Configuration CircleBuildHost {
                 
                 # Add to PATH if not already there
                 $envPath = [Environment]::GetEnvironmentVariable("PATH", "Machine")
-                if ($envPath -notlike "*$extractPath*") {
-                    [Environment]::SetEnvironmentVariable("PATH", "$envPath;$extractPath", "Machine")
+                if ($envPath -notlike "*$installerPath*") {
+                    [Environment]::SetEnvironmentVariable("PATH", "$envPath;$installerPath", "Machine")
                 }
-                
-                Remove-Item $zipPath -Force
+
+                Remove-Item $installerPath -Force
             }
             TestScript = {
                 return (Test-Path "C:\Program Files\7-Zip-Portable\7z.exe")
