@@ -13,6 +13,7 @@ filters: &filters
   branches:
     only: 
     - master
+    - update-404-package-and-envvar-refresh
 
 
 library:
@@ -89,7 +90,7 @@ library:
 
             ./scripts/get_last_image "${PROVIDER}" "${MONOREPO_CONTENT_SHA}" "${CIRCLE_JOB}" && {
                 echo "${PROVIDER} image with monorepo_content_sha = ${MONOREPO_CONTENT_SHA} and circle_job_name = ${CIRCLE_JOB} already exists. Skipping build"
-              } || packer build \
+              } || PACKER_LOG=1 packer build \
               -machine-readable \
               --only "${PROVIDER}" \
               --var project_id="${GOOGLE_PROJECT_ID}" \
@@ -97,7 +98,7 @@ library:
               --var gce_zone="${GOOGLE_COMPUTE_ZONE}" \
               --var monorepo_content_sha="${MONOREPO_CONTENT_SHA}" \
               --var image_family_suffix="${IMAGE_FAMILY_SUFFIX}" \
-              --var ami_region="us-east-1" \
+              --var ami_region="ap-southeast-1" \
               --var windows_user="${WINDOWS_USER}" \
               --var test_results_path="/tmp/results/test-results.xml" \
               ${SOURCE_IMAGE_VAR} \
@@ -476,14 +477,14 @@ jobs:
 
             ./scripts/get_last_image << parameters.packer_provider >> "${MONOREPO_CONTENT_SHA}" "${CIRCLE_JOB}" && {
                 echo "<< parameters.packer_provider >> image with monorepo_content_sha = ${MONOREPO_CONTENT_SHA} and circle_job_name = ${CIRCLE_JOB} already exists. Skipping build"
-              } || packer build \
+              } || PACKER_LOG=1 packer build \
               -machine-readable \
               --only << parameters.packer_provider >> \
               --var project_id=${GOOGLE_PROJECT_ID} \
               --var account_file=/tmp/gce-credentials.json \
               --var monorepo_content_sha="${MONOREPO_CONTENT_SHA}" \
               --var image_family_suffix="${IMAGE_FAMILY_SUFFIX}" \
-              --var ami_region="us-east-1" \
+              --var ami_region="ap-southeast-1" \
               --var windows_user="${WINDOWS_USER}" \
               --var test_results_path="/tmp/results/test-results.xml" \
               --var playbook_file="<< parameters.playbook_file >>" \
