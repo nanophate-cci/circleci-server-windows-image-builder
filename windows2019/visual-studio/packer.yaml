@@ -23,6 +23,9 @@ builders:
     access_key: ""
     secret_key: ""
     region: '{{ user "ami_region" }}'
+    vpc_id: 'vpc-005f348e9ea84975f'                  # Add this
+    subnet_id: 'subnet-0fb0f109343d86276'            # Add this
+    associate_public_ip_address: true                # Add this
     source_ami_filter:
       filters:
         virtualization-type: "hvm"
